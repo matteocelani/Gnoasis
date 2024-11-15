@@ -5,7 +5,7 @@ export default function Custom404() {
   return (
     <Fragment>
       <Head>
-        <title>Next.js dApp | 404: This page could not be found.</title>
+        <title>SmartPocket | 404: This page could not be found.</title>
 
         <meta name="image" content="/img/logo.png" />
 
@@ -18,7 +18,7 @@ export default function Custom404() {
       </Head>
 
       <div className="w-full flex flex-col">
-        <h1 className="flex flex-col sm:flex-row justify-center items-center text-4xl font-bold ">
+        <h1 className="flex flex-col sm:flex-row justify-center items-center text-4xl font-bold">
           404
         </h1>
         <h2 className="text-2xl text-center mt-4">
