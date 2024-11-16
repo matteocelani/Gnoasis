@@ -13,7 +13,7 @@ export default function WalletItem({ wallet, onSelect }: WalletItemProps) {
   return (
     <button
       onClick={() => onSelect(wallet)}
-      className="w-full p-4 bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors flex items-center justify-between group"
+      className="w-full p-4 bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors flex items-center justify-between group mb-2"
     >
       <div className="flex items-center space-x-3">
         <div className="p-2 bg-blue-100 dark:bg-blue-900 rounded-full group-hover:bg-blue-200 dark:group-hover:bg-blue-800 transition-colors">

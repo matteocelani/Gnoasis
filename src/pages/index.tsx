@@ -13,6 +13,7 @@ import BalanceDisplayLoading from '@/components/BalanceDisplay/loading';
 import ActionButtonsLoading from '@/components/ActionButtons/loading';
 import TransactionsListLoading from '@/components/TransactionsList/loading';
 import SwitchWalletModal from '@/components/SwitchWalletModal';
+import TokenListModal from '@/components/TokenListModal';
 // Importing Icons
 import { Plus, ArrowRightLeft, Coins, RefreshCw } from 'lucide-react';
 // Importing Constants
@@ -23,6 +24,7 @@ export default function Home() {
   const { selectedWallet } = useWallet();
 
   const [isSwitchModalOpen, setIsSwitchModalOpen] = useState(false);
+  const [isTokenListModalOpen, setIsTokenListModalOpen] = useState(false);
 
   const { tokenBalances, transactions, isLoading, isError } = useWalletData({
     address: selectedWallet?.address || '',
@@ -61,7 +63,11 @@ export default function Home() {
   const actionButtons = [
     { icon: <Plus size={24} />, label: 'Add' },
     { icon: <ArrowRightLeft size={24} />, label: 'Move' },
-    { icon: <Coins size={24} />, label: 'Tokens' },
+    {
+      icon: <Coins size={24} />,
+      label: 'Tokens',
+      onClick: () => setIsTokenListModalOpen(true),
+    },
     {
       icon: <RefreshCw size={24} />,
       label: 'Switch',
@@ -80,6 +86,11 @@ export default function Home() {
       <SwitchWalletModal
         isOpen={isSwitchModalOpen}
         onClose={() => setIsSwitchModalOpen(false)}
+      />
+      <TokenListModal
+        isOpen={isTokenListModalOpen}
+        onClose={() => setIsTokenListModalOpen(false)}
+        tokenBalances={tokenBalances?.balances}
       />
     </div>
   );

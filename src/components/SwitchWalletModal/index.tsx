@@ -178,7 +178,7 @@ export default function SwitchWalletModal({
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
               )}
-              <ScrollArea className="h-[240px] rounded-md border p-4">
+              <ScrollArea className="max-h-60 rounded-md border p-4">
                 {filteredWallets.length > 0 ? (
                   filteredWallets.map((wallet) => (
                     <WalletItem
