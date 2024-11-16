@@ -7,6 +7,9 @@ import { useWalletData } from '@/hooks/useWalletData';
 import { ActionButtons } from '@/components/ActionButtons';
 import { TransactionsList } from '@/components/TransactionsList';
 import { Card } from '@/components/ui/card';
+import CardLoading from '@/components/CreditCard';
+import ActionButtonsLoading from '@/components/ActionButtons/loading';
+import TransactionsListLoading from '@/components/TransactionsList/loading';
 // Importing Icons
 import { Eye, EyeOff, Lock, Unlock, Settings } from 'lucide-react';
 // Importing Constant
@@ -37,8 +40,15 @@ export default function Cards() {
     return (
       <div className="text-center p-8 text-xl">Please connect your wallet</div>
     );
-  if (isLoading)
-    return <div className="text-center p-8 text-xl">Loading...</div>;
+  if (isLoading) {
+    return (
+      <div className="max-w-md mx-auto w-full flex flex-col space-y-6 p-4">
+        <CardLoading />
+        <ActionButtonsLoading />
+        <TransactionsListLoading />
+      </div>
+    );
+  }
   if (isError)
     return (
       <div className="text-center p-8 text-xl text-red-500">
@@ -64,7 +74,7 @@ export default function Cards() {
     {
       icon: <Settings size={24} />,
       label: 'Settings',
-      onClick: () => router.push('/card-settings'),
+      onClick: () => router.push('/settings'),
     },
   ];
 
@@ -113,7 +123,7 @@ export default function Cards() {
       <ActionButtons actions={actionButtons} />
       <TransactionsList
         transactions={formattedTransactions}
-        showAllLink="/card-transaction"
+        showAllLink="/transaction"
       />
     </div>
   );

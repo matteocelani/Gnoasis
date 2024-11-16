@@ -6,6 +6,10 @@ import { useWalletData } from '@/hooks/useWalletData';
 import { BalanceDisplay } from '@/components/BalanceDisplay';
 import { ActionButtons } from '@/components/ActionButtons';
 import { TransactionsList } from '@/components/TransactionsList';
+import BalanceDisplayLoading from '@/components/BalanceDisplay/loading';
+import ActionButtonsLoading from '@/components/ActionButtons/loading';
+import TransactionsListLoading from '@/components/TransactionsList/loading';
+// Importing Icons
 import { Plus, ArrowRightLeft, FileText, MoreHorizontal } from 'lucide-react';
 // Importing Constants
 import { GNOSIS_CHAIN_ID } from '@/lib/constants';
@@ -27,8 +31,17 @@ export default function Home() {
     return (
       <div className="text-center p-8 text-xl">Please connect your wallet</div>
     );
-  if (isLoading)
-    return <div className="text-center p-8 text-xl">Loading...</div>;
+
+  if (isLoading) {
+    return (
+      <div className="max-w-md mx-auto w-full flex flex-col space-y-6 p-4">
+        <BalanceDisplayLoading />
+        <ActionButtonsLoading />
+        <TransactionsListLoading />
+      </div>
+    );
+  }
+
   if (isError)
     return (
       <div className="text-center p-8 text-xl text-red-500">
