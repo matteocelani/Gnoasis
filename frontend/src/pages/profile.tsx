@@ -7,7 +7,7 @@ export default function Home() {
       <Meta />
 
       <div className="w-full flex flex-col">
-        <h3 className="text-2xl text-center mt-4">Home</h3>
+        <h3 className="text-2xl text-center mt-4">Profile</h3>
       </div>
     </Fragment>
   );

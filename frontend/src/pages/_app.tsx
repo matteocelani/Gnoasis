@@ -1,11 +1,10 @@
 import React from 'react';
 import type { AppProps } from 'next/app';
+import dynamic from 'next/dynamic';
 // Importing Next Themes
 import { ThemeProvider } from 'next-themes';
 // TanStack
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-// Importing Layout
-import Layout from '@/layout';
 // Importing Styles
 import '@/assets/styles/globals.scss';
 // Raimbow Kit
@@ -17,6 +16,8 @@ import { WagmiProvider } from 'wagmi';
 import { wagmiConfig } from '@/lib/constants/wagmiConfig';
 // Merge
 import merge from 'lodash.merge';
+// Importing Layout
+const Layout = dynamic(() => import('@/layout'), { ssr: false });
 
 const theme = merge(lightTheme(), {
   colors: {
@@ -36,7 +37,7 @@ const queryClient = new QueryClient();
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
-    <ThemeProvider attribute="class">
+    <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
       <WagmiProvider config={wagmiConfig}>
         <QueryClientProvider client={queryClient}>
           <RainbowKitProvider theme={theme} showRecentTransactions={true}>
