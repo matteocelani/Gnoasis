@@ -2,9 +2,7 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 export function middleware(request: NextRequest) {
-  console.log('Middleware executed');
   const userAgent = request.headers.get('user-agent') || '';
-  console.log('User Agent:', userAgent);
   const isMobile =
     /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(
       userAgent.toLowerCase()
