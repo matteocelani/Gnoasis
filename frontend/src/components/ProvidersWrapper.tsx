@@ -11,6 +11,7 @@ import useWagmiConfig from '@/hooks/useWagmiConfig';
 // Merge
 import merge from 'lodash.merge';
 import { gnosis } from 'wagmi/chains';
+import { WalletProvider } from '@/context/WalletContext';
 
 const theme = merge(lightTheme(), {
   colors: {
@@ -37,16 +38,18 @@ export default function ProviderWrapper({ children }: ProviderWrapperProps) {
   if (!wagmiConfig) return null;
 
   return (
-    <WagmiProvider config={wagmiConfig}>
-      <QueryClientProvider client={queryClient}>
-        <RainbowKitProvider
-          initialChain={gnosis}
-          theme={theme}
-          showRecentTransactions={true}
-        >
-          {children}
-        </RainbowKitProvider>
-      </QueryClientProvider>
-    </WagmiProvider>
+    <WalletProvider>
+      <WagmiProvider config={wagmiConfig}>
+        <QueryClientProvider client={queryClient}>
+          <RainbowKitProvider
+            initialChain={gnosis}
+            theme={theme}
+            showRecentTransactions={true}
+          >
+            {children}
+          </RainbowKitProvider>
+        </QueryClientProvider>
+      </WagmiProvider>
+    </WalletProvider>
   );
 }

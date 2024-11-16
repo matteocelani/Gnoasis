@@ -2,15 +2,19 @@ import React, { PropsWithChildren, useState, useEffect } from 'react';
 import Head from 'next/head';
 // Importing Hooks
 import { useAccount } from 'wagmi';
+import { useWallet } from '@/hooks/useWallet';
 // Importing Layout
 import Header from '@/layout/header';
 import TabBar from '@/layout/tabbar';
+import SmartWalletSelection from '@/layout/SmartWalletSelection';
 // Importing Components
 import { Login } from '@/components/Login';
 import { Spinner } from '@/components/ui/spinner';
 
 export default function Layout({ children }: PropsWithChildren) {
   const { isConnecting, isConnected, isDisconnected } = useAccount();
+  const { selectedWallet } = useWallet();
+
   const [isInitialized, setIsInitialized] = useState(false);
 
   useEffect(() => {
@@ -31,6 +35,14 @@ export default function Layout({ children }: PropsWithChildren) {
     return (
       <div className="min-h-screen w-full bg-background flex items-center justify-center px-8">
         <Login />
+      </div>
+    );
+  }
+
+  if (selectedWallet) {
+    return (
+      <div className="min-h-screen w-full bg-background flex items-center justify-center px-8">
+        <SmartWalletSelection />
       </div>
     );
   }

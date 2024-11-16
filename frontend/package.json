@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@radix-ui/react-avatar": "^1.1.1",
+    "@radix-ui/react-scroll-area": "^1.2.1",
     "@radix-ui/react-separator": "^1.1.0",
     "@radix-ui/react-slot": "^1.1.0",
     "@radix-ui/react-switch": "^1.1.1",
@@ -25,6 +26,7 @@
     "@web3auth/openlogin-adapter": "^8.12.4",
     "@web3auth/wallet-services-plugin": "^8.12.4",
     "@web3auth/web3auth-wagmi-connector": "^6.0.0",
+    "axios": "^1.7.7",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "eslint-config-next": "^14.2.18",
