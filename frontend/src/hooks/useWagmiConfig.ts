@@ -42,12 +42,14 @@ import {
 // Wagmi
 import { http, createConfig, Config } from 'wagmi';
 import { gnosis } from 'wagmi/chains';
+// Web3Auth
+import { WalletServicesPlugin } from '@web3auth/wallet-services-plugin';
 // Hooks
 import { useEmail } from '@/hooks/useEmail';
+// Importing Web3Auth
+import createWeb3AuthInstances from '@/lib/constants/web3AuthConnectorInstance';
 
 const projectId = process.env.NEXT_PUBLIC_WALLETCONNECT_ID || '';
-
-import createWeb3AuthInstances from '@/lib/constants/web3AuthConnectorInstance';
 
 const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
 
@@ -113,33 +115,42 @@ const initialCustomConnectors = createWeb3AuthInstances(
 const initialConfig = createConfig({
   chains: [gnosis],
   transports,
-  connectors: [...initialCustomConnectors, ...connectors],
+  connectors: [...initialCustomConnectors.connectors, ...connectors],
   ssr: true,
 });
 
-export default function useWagmiConfig(): Config {
+export default function useWagmiConfig(): {
+  config: Config | null;
+  walletServicesPlugin: WalletServicesPlugin | null;
+} {
   const { email } = useEmail();
 
   const [config, setConfig] = useState<Config>(initialConfig);
+  const [walletServicesPlugin, setWalletServicesPlugin] =
+    useState<WalletServicesPlugin>(
+      initialCustomConnectors.walletServicesPlugin
+    );
 
   useEffect(() => {
     if (email && emailRegex.test(email)) {
-      const customConnectors = createWeb3AuthInstances(
-        [gnosis],
-        ['google', 'apple', 'twitter', 'discord', 'email_passwordless'],
-        email // Pass the email dynamically
-      );
+      const { connectors, walletServicesPlugin: instance } =
+        createWeb3AuthInstances(
+          [gnosis],
+          ['google', 'apple', 'twitter', 'discord', 'email_passwordless'],
+          email
+        );
 
       const updatedConfig = createConfig({
         chains: [gnosis],
         transports,
-        connectors: [...customConnectors, ...connectors],
+        connectors: [...connectors, ...connectors],
         ssr: true,
       });
 
       setConfig(updatedConfig);
+      setWalletServicesPlugin(instance);
     }
   }, [email]); // Re-run this effect when `email` changes
 
-  return config;
+  return { config, walletServicesPlugin };
 }

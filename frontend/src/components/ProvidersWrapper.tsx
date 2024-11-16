@@ -33,13 +33,13 @@ interface ProviderWrapperProps {
 }
 
 export default function ProviderWrapper({ children }: ProviderWrapperProps) {
-  const wagmiConfig = useWagmiConfig();
+  const { config } = useWagmiConfig();
 
-  if (!wagmiConfig) return null;
+  if (!config) return null;
 
   return (
     <WalletProvider>
-      <WagmiProvider config={wagmiConfig}>
+      <WagmiProvider config={config}>
         <QueryClientProvider client={queryClient}>
           <RainbowKitProvider
             initialChain={gnosis}

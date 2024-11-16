@@ -20,6 +20,7 @@ export default function createWeb3AuthInstances(
     tickerName: chains[0].nativeCurrency?.name,
     ticker: chains[0].nativeCurrency?.symbol,
     blockExplorerUrl: chains[0].blockExplorers?.default.url[0] as string,
+    logo: 'https://web3auth.io/images/web3authlog.png',
   };
 
   const privateKeyProvider = new EthereumPrivateKeyProvider({
@@ -32,7 +33,7 @@ export default function createWeb3AuthInstances(
     chainConfig,
     privateKeyProvider,
     uiConfig: {
-      appName: 'SamrtPocket',
+      appName: 'SmartPocket',
       defaultLanguage: 'en',
       logoLight: 'https://web3auth.io/images/web3authlog.png',
       logoDark: 'https://web3auth.io/images/web3authlogodark.png',
@@ -53,7 +54,7 @@ export default function createWeb3AuthInstances(
   const walletServicesPlugin = new WalletServicesPlugin({
     walletInitOptions: {
       whiteLabel: {
-        showWidgetButton: false,
+        showWidgetButton: true,
       },
     },
   });
@@ -72,5 +73,8 @@ export default function createWeb3AuthInstances(
     })
   );
 
-  return connectors;
+  return {
+    connectors,
+    walletServicesPlugin,
+  };
 }

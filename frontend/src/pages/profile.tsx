@@ -1,4 +1,6 @@
 import React from 'react';
+// Importing Web3Auth
+import useWagmiConfig from '@/hooks/useWagmiConfig';
 // Importing Hooks
 import { useAccount } from 'wagmi';
 import { useWalletData } from '@/hooks/useWalletData';
@@ -16,11 +18,25 @@ import { Plus, ArrowUpRight, ArrowDownLeft } from 'lucide-react';
 import { GNOSIS_CHAIN_ID } from '@/lib/constants';
 
 export default function Profile() {
+  const { walletServicesPlugin } = useWagmiConfig();
+
   const { address, isConnected } = useAccount();
   const { tokenBalances, transactions, isLoading, isError } = useWalletData({
     address: address || '',
     chainIds: GNOSIS_CHAIN_ID,
   });
+
+  const handleOnRamp = async () => {
+    if (walletServicesPlugin?.status === 'connected') {
+      try {
+        await walletServicesPlugin.showCheckout();
+      } catch (error) {
+        console.error('Error showing on-ramp checkout:', error);
+      }
+    } else {
+      console.error('WalletServicesPlugin not connected');
+    }
+  };
 
   const totalBalance =
     tokenBalances?.balances.reduce(
@@ -52,7 +68,7 @@ export default function Profile() {
     );
 
   const actionButtons = [
-    { icon: <Plus size={24} />, label: 'Add' },
+    { icon: <Plus size={24} />, label: 'Add', onClick: handleOnRamp },
     { icon: <ArrowUpRight size={24} />, label: 'Send' },
     { icon: <ArrowDownLeft size={24} />, label: 'Receive' },
   ];
