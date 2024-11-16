@@ -39,7 +39,7 @@ export default function Layout({ children }: PropsWithChildren) {
     );
   }
 
-  if (selectedWallet) {
+  if (!selectedWallet) {
     return (
       <div className="min-h-screen w-full bg-02 dark:bg-08 flex items-center justify-center px-8">
         <SmartWalletSelection />

@@ -1,17 +1,21 @@
 import React, { useState } from 'react';
 // Importing Hooks
-import { useAccount } from 'wagmi';
 import { useWallet } from '@/hooks/useWallet';
 import { useAccounts } from '@/hooks/useAccounts';
+import { useAccount, useClient, useConnectorClient } from 'wagmi';
 // Importing Utils
-import { formatBalance } from '@/lib/utils/mathUtils';
-import { getShortAddress } from '@/lib/utils/addressUtils';
+import { http } from 'viem';
+import { gnosis } from 'viem/chains';
+import { createPimlicoClient } from 'permissionless/clients/pimlico';
+import { entryPoint07Address } from 'viem/account-abstraction';
+import { toSafeSmartAccount } from 'permissionless/accounts';
+import { createSmartAccountClient } from 'permissionless';
 // Importing Components
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import WalletItem from '@/components/WalletItem';
+import SearchInput from '@/components/SearchInput';
+import DeployButton from '@/components/DeployButton';
+import LoadingWallet from '@/components/LoadingWallet';
 import { ScrollArea } from '@/components/ui/scroll-area';
-// Importing Icons
-import { Wallet, Plus, Search } from 'lucide-react';
 // Importing Types
 import { SmartWallet } from '@/lib/types/context';
 // Importing Constants
@@ -20,36 +24,120 @@ import { GNOSIS_CHAIN_ID } from '@/lib/constants';
 export default function SmartWalletSelection() {
   const { setSelectedWallet } = useWallet();
   const { address } = useAccount();
-  const { useGetAccounts } = useAccounts(address || '');
+  const client = useClient();
+  const { data: connectorClient } = useConnectorClient();
 
-  const { data: safeAccounts, isLoading, error } = useGetAccounts();
+  const { useGetAccounts } = useAccounts(address || '');
+  const { data: safeAccounts, isLoading, error, refetch } = useGetAccounts();
 
   const [searchTerm, setSearchTerm] = useState('');
-
-  function handleSelectWallet(wallet: SmartWallet) {
-    console.log('Selected Wallet:', wallet);
-    setSelectedWallet(wallet);
-  }
-
-  async function handleCreateNewWallet() {
-    console.log('Create a new wallet');
-    // Create a new wallet
-  }
+  const [isDeploying, setIsDeploying] = useState(false);
+  const [deployError, setDeployError] = useState<string | null>(null);
 
   const gnosisWallets = safeAccounts?.[GNOSIS_CHAIN_ID] || [];
-
   const filteredWallets = gnosisWallets
-    .map((address) => ({
-      address,
-      chainId: GNOSIS_CHAIN_ID,
-      balance: BigInt(0),
-    }))
+    .map(
+      (address): SmartWallet => ({
+        address,
+        chainId: GNOSIS_CHAIN_ID,
+        balance: BigInt(0),
+      })
+    )
     .filter((wallet) =>
       wallet.address.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
+  function handleSelectWallet(wallet: SmartWallet) {
+    setSelectedWallet(wallet);
+  }
+
+  async function handleCreateNewWallet() {
+    if (!address || !connectorClient) {
+      setDeployError('Wallet not connected');
+      return;
+    }
+
+    setIsDeploying(true);
+    setDeployError(null);
+
+    try {
+      const pimlicoApiKey = process.env.NEXT_PUBLIC_PIMLICO_KEY;
+      if (!pimlicoApiKey) {
+        throw new Error('Pimlico API key not found');
+      }
+
+      const paymasterClient = createPimlicoClient({
+        transport: http(
+          `https://api.pimlico.io/v2/100/rpc?apikey=${pimlicoApiKey}`
+        ),
+        entryPoint: {
+          address: entryPoint07Address,
+          version: '0.7',
+        },
+      });
+
+      if (!client) {
+        throw new Error('Client not found');
+      }
+
+      const safeAccount = await toSafeSmartAccount({
+        client: client,
+        entryPoint: {
+          address: entryPoint07Address,
+          version: '0.7',
+        },
+        // @ts-expect-error - Viem types not compatible with Permissionless types
+        owners: [connectorClient],
+        saltNonce: BigInt(Math.floor(Math.random() * Number.MAX_SAFE_INTEGER)),
+        version: '1.4.1',
+      });
+
+      const smartAccountClient = createSmartAccountClient({
+        account: safeAccount,
+        chain: gnosis,
+        paymaster: paymasterClient,
+        bundlerTransport: http(
+          `https://api.pimlico.io/v2/100/rpc?apikey=${pimlicoApiKey}`
+        ),
+        userOperation: {
+          estimateFeesPerGas: async () =>
+            (await paymasterClient.getUserOperationGasPrice()).fast,
+        },
+      });
+
+      // Deploy the smart account by sending a transaction
+      await smartAccountClient.sendTransaction({
+        to: safeAccount.address,
+        value: BigInt(0),
+        data: '0x',
+      });
+
+      await refetch();
+
+      setSelectedWallet({
+        address: safeAccount.address,
+        chainId: GNOSIS_CHAIN_ID,
+        balance: BigInt(0),
+      });
+    } catch (err) {
+      console.error('Error creating smart account:', err);
+      setDeployError('Failed to create smart account. Please try again.');
+    } finally {
+      setIsDeploying(false);
+    }
+  }
+
   if (isLoading) {
-    return <div>Loading your Safe wallets on Gnosis Chain...</div>;
+    return (
+      <div className="w-full max-w-md mx-auto p-6 space-y-6">
+        <h2 className="text-2xl font-bold text-center text-gray-800 dark:text-gray-200">
+          Loading Smart Wallets
+        </h2>
+        <LoadingWallet />
+        <LoadingWallet />
+        <LoadingWallet />
+      </div>
+    );
   }
 
   if (error) {
@@ -57,59 +145,37 @@ export default function SmartWalletSelection() {
   }
 
   return (
-    <div className="w-full max-w-md mx-auto p-4">
-      {filteredWallets.length !== 0 && (
-        <h2 className="text-xl font-semibold mb-4 text-center">
-          Select or Deploy Smart Wallet on Gnosis Chain
-        </h2>
+    <div className="w-full max-w-md mx-auto p-6 space-y-6 bg-background rounded-lg shadow">
+      <h2 className="text-2xl font-bold text-center">Smart Wallet Manager</h2>
+
+      {filteredWallets.length > 4 && (
+        <SearchInput
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
       )}
 
-      {filteredWallets.length > 0 && (
-        <>
-          <div className="mb-4 relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-            <Input
-              type="text"
-              placeholder="Search wallets..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10"
+      <ScrollArea className="max-h-96 rounded-md border">
+        {filteredWallets.length > 0 ? (
+          filteredWallets.map((wallet) => (
+            <WalletItem
+              key={wallet.address}
+              wallet={wallet}
+              onSelect={handleSelectWallet}
             />
-          </div>
+          ))
+        ) : (
+          <p className="text-center text-muted-foreground p-4">
+            No wallets found. Deploy a new one!
+          </p>
+        )}
+      </ScrollArea>
 
-          <ScrollArea className="h-[400px] rounded-md border p-4">
-            {filteredWallets.map((wallet) => (
-              <button
-                key={wallet.address}
-                onClick={() => handleSelectWallet(wallet)}
-                className="w-full text-left p-3 hover:bg-gray-100 rounded-lg transition-colors flex items-center justify-between"
-              >
-                <div className="flex items-center space-x-3">
-                  <Wallet className="w-5 h-5 text-blue-500" />
-                  <div>
-                    <p className="font-medium">
-                      {getShortAddress(wallet.address)}
-                    </p>
-                    <p className="text-sm text-gray-500">Gnosis Chain</p>
-                  </div>
-                </div>
-                <div className="text-right">
-                  <p className="font-bold text-green-600">
-                    {formatBalance(wallet.balance)} xDAI
-                  </p>
-                </div>
-              </button>
-            ))}
-          </ScrollArea>
-        </>
+      <DeployButton onClick={handleCreateNewWallet} isDeploying={isDeploying} />
+
+      {deployError && (
+        <p className="text-destructive text-sm text-center">{deployError}</p>
       )}
-
-      <Button
-        onClick={handleCreateNewWallet}
-        className="w-full mt-4 bg-blue-500 hover:bg-blue-600 text-white"
-      >
-        <Plus className="w-5 h-5" /> Deploy New Smart Wallet
-      </Button>
     </div>
   );
 }
