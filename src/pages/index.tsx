@@ -1,7 +1,10 @@
 import React from 'react';
+// Importing Viem
+import { formatUnits } from 'viem';
 // Importing Hooks
 import { useAccount } from 'wagmi';
 import { useWalletData } from '@/hooks/useWalletData';
+import { useWallet } from '@/hooks/useWallet';
 // Importing Components
 import { BalanceDisplay } from '@/components/BalanceDisplay';
 import { ActionButtons } from '@/components/ActionButtons';
@@ -10,22 +13,25 @@ import BalanceDisplayLoading from '@/components/BalanceDisplay/loading';
 import ActionButtonsLoading from '@/components/ActionButtons/loading';
 import TransactionsListLoading from '@/components/TransactionsList/loading';
 // Importing Icons
-import { Plus, ArrowRightLeft, FileText, MoreHorizontal } from 'lucide-react';
+import { Plus, ArrowRightLeft, Coins, RefreshCw } from 'lucide-react';
 // Importing Constants
 import { GNOSIS_CHAIN_ID } from '@/lib/constants';
 
 export default function Home() {
-  const { address, isConnected } = useAccount();
+  const { isConnected } = useAccount();
+  const { selectedWallet } = useWallet();
+
   const { tokenBalances, transactions, isLoading, isError } = useWalletData({
-    address: address || '',
+    address: selectedWallet?.address || '',
     chainIds: GNOSIS_CHAIN_ID,
   });
 
-  const totalBalance =
-    tokenBalances?.balances.reduce(
-      (total, token) => total + (token.value_usd || 0),
-      0
-    ) || 0;
+  const xDaiToken = tokenBalances?.balances.find(
+    (token) => token.symbol.toLowerCase() === 'xdai'
+  );
+  const xDaiBalance = xDaiToken
+    ? parseFloat(formatUnits(BigInt(xDaiToken.amount), xDaiToken.decimals))
+    : 0;
 
   if (!isConnected)
     return (
@@ -52,13 +58,13 @@ export default function Home() {
   const actionButtons = [
     { icon: <Plus size={24} />, label: 'Add' },
     { icon: <ArrowRightLeft size={24} />, label: 'Move' },
-    { icon: <FileText size={24} />, label: 'Details' },
-    { icon: <MoreHorizontal size={24} />, label: 'More' },
+    { icon: <Coins size={24} />, label: 'Tokens' },
+    { icon: <RefreshCw size={24} />, label: 'Switch' },
   ];
 
   return (
     <div className="max-w-md mx-auto w-full flex flex-col space-y-6 p-4">
-      <BalanceDisplay balance={totalBalance} title="Total Balance" />
+      <BalanceDisplay balance={xDaiBalance} title="xDai Balance" />
       <ActionButtons actions={actionButtons} />
       <TransactionsList
         transactions={transactions?.transactions || []}

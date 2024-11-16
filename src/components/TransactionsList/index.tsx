@@ -37,16 +37,6 @@ export function TransactionsList({
     return transaction.transaction_type;
   };
 
-  // Format transaction value from Wei to ETH
-  const formatValue = (value: string) => {
-    // Convert hex string to BigInt
-    const valueInWei = BigInt(value);
-    // Convert Wei to ETH (1 ETH = 10^18 Wei)
-    const valueInEth = Number(valueInWei) / 1e18;
-    // Format the number with 4 decimal places
-    return valueInEth.toFixed(4) + ' ETH';
-  };
-
   return (
     <Card className="shadow-md rounded-xl overflow-hidden">
       <CardHeader>
@@ -67,19 +57,14 @@ export function TransactionsList({
                   {formatDate(transaction.block_time)}
                 </div>
               </div>
-              <div className="flex flex-col items-end">
-                <div className="text-sm font-semibold text-gray-700">
-                  {formatValue(transaction.value)}
-                </div>
-                <a
-                  href={getGnosisScanUrl(transaction.hash)}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-xs text-blue-500 hover:text-blue-600 flex items-center"
-                >
-                  {getShortAddress(transaction.hash)}
-                </a>
-              </div>
+              <a
+                href={getGnosisScanUrl(transaction.hash)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs text-blue-500 hover:text-blue-600 flex items-center"
+              >
+                {getShortAddress(transaction.hash)}
+              </a>
             </div>
           ))
         ) : (

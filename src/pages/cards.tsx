@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
+// Importing Viem
+import { formatUnits } from 'viem';
 // Importing Hooks
 import { useRouter } from 'next/router';
 import { useAccount } from 'wagmi';
+import { useWallet } from '@/hooks/useWallet';
 // Importing components
 import { useWalletData } from '@/hooks/useWalletData';
 import { ActionButtons } from '@/components/ActionButtons';
@@ -25,16 +28,25 @@ const cardData = {
 };
 
 export default function Cards() {
+  const { selectedWallet } = useWallet();
+  const router = useRouter();
+  const { isConnected } = useAccount();
+
   const [showDetails, setShowDetails] = useState(false);
   const [isFrozen, setIsFrozen] = useState(false);
-  const router = useRouter();
-  const { address, isConnected } = useAccount();
   const { tokenBalances, transactions, isLoading, isError } = useWalletData({
-    address: address || '',
+    address: selectedWallet?.address || '',
     chainIds: GNOSIS_CHAIN_ID,
   });
 
-  const cardBalance = tokenBalances?.balances[0]?.value_usd || 0; // Assuming the first token is the card balance
+  const xDaiToken = tokenBalances?.balances.find(
+    (token) => token.symbol.toLowerCase() === 'xdai'
+  );
+  const xDaiBalance = xDaiToken
+    ? parseFloat(
+        formatUnits(BigInt(xDaiToken.amount), xDaiToken.decimals)
+      ).toFixed(2)
+    : '0.00';
 
   if (!isConnected)
     return (
@@ -84,8 +96,8 @@ export default function Cards() {
         <Card className="absolute w-full h-full bg-gradient-to-br from-green-400 to-green-600 dark:from-green-600 dark:to-green-800 text-white p-6 flex flex-col justify-between rounded-2xl overflow-hidden shadow-lg">
           <div className="text-lg font-bold">Gnosis Card</div>
           <div className="text-right">
-            <div className="text-sm opacity-80">Balance</div>
-            <div className="text-3xl font-bold">{cardBalance}</div>
+            <div className="text-sm opacity-80">xDai Balance</div>
+            <div className="text-3xl font-bold">{xDaiBalance}</div>
             <div className="mt-2 text-lg">•••• {cardData.lastFourDigits}</div>
           </div>
           {/* Overlay for card details */}

@@ -1,4 +1,6 @@
 import React from 'react';
+// Importing Viem
+import { formatUnits } from 'viem';
 // Importing Web3Auth
 import useWagmiConfig from '@/hooks/useWagmiConfig';
 // Importing Hooks
@@ -49,11 +51,12 @@ export default function Profile() {
     }
   };
 
-  const totalBalance =
-    tokenBalances?.balances.reduce(
-      (total, token) => total + (token.value_usd || 0),
-      0
-    ) || 0;
+  const xDaiToken = tokenBalances?.balances.find(
+    (token) => token.symbol.toLowerCase() === 'xdai'
+  );
+  const xDaiBalance = xDaiToken
+    ? parseFloat(formatUnits(BigInt(xDaiToken.amount), xDaiToken.decimals))
+    : 0;
 
   if (!isConnected)
     return (
@@ -87,7 +90,7 @@ export default function Profile() {
   return (
     <div className="max-w-md mx-auto w-full flex flex-col space-y-6 p-4">
       <ProfileAvatar address={address || ''} />
-      <BalanceDisplay balance={totalBalance} title="Gnosis Chain Balance" />
+      <BalanceDisplay balance={xDaiBalance} title="xDai Balance" />
       <ActionButtons actions={actionButtons} />
       <TransactionsList
         transactions={transactions?.transactions || []}
