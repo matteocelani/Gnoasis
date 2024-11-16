@@ -20,7 +20,7 @@ export default function Layout({ children }: PropsWithChildren) {
   }
 
   return (
-    <div className="flex flex-col min-h-screen bg-background text-foreground">
+    <div className="flex flex-col min-h-screen bg-02 dark:bg-08 text-foreground">
       <Head>
         <meta
           name="viewport"
