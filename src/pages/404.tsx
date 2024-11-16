@@ -5,7 +5,7 @@ export default function Custom404() {
   return (
     <Fragment>
       <Head>
-        <title>SmartPocket | 404: This page could not be found.</title>
+        <title>Gnoasis | 404: This page could not be found.</title>
 
         <meta name="image" content="/img/logo.png" />
 

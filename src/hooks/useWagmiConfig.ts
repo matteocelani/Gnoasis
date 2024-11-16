@@ -101,7 +101,7 @@ const connectors = connectorsForWallets(
     },
   ],
   {
-    appName: 'SmartPocket',
+    appName: 'Gnoasis',
     projectId,
   }
 );

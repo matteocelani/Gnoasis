@@ -1,8 +1,8 @@
 // Metadata Head
 export const metadata = {
-  title: 'SmartPocket',
-  description: 'SmartPocket',
-  keywords: 'SmartPocket',
+  title: 'Gnoasis',
+  description: 'Gnoasis',
+  keywords: 'Gnoasis',
   type: 'website',
   url: '',
   image: '',

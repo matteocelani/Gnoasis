@@ -33,7 +33,7 @@ export default function createWeb3AuthInstances(
     chainConfig,
     privateKeyProvider,
     uiConfig: {
-      appName: 'SmartPocket',
+      appName: 'Gnoasis',
       defaultLanguage: 'en',
       logoLight: 'https://web3auth.io/images/web3authlog.png',
       logoDark: 'https://web3auth.io/images/web3authlogodark.png',

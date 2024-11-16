@@ -45,7 +45,7 @@ export default function Swap() {
     );
 
   const params: CowSwapWidgetParams = {
-    appCode: 'SmartPocket',
+    appCode: 'Gnoasis',
     width: '100%',
     height: '640px',
     chainId: GNOSIS_CHAIN_ID,
