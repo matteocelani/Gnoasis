@@ -2,7 +2,7 @@ import React from 'react';
 // Importing Web3Auth
 import useWagmiConfig from '@/hooks/useWagmiConfig';
 // Importing Hooks
-import { useAccount } from 'wagmi';
+import { useAccount, useDisconnect } from 'wagmi';
 import { useWalletData } from '@/hooks/useWalletData';
 // Importing Components
 import { BalanceDisplay } from '@/components/BalanceDisplay';
@@ -12,6 +12,7 @@ import BalanceDisplayLoading from '@/components/BalanceDisplay/loading';
 import ActionButtonsLoading from '@/components/ActionButtons/loading';
 import TransactionsListLoading from '@/components/TransactionsList/loading';
 import { ProfileAvatar } from '@/components/ProfileAvatar';
+import { Button } from '@/components/ui/button';
 // Importing Icons
 import { Plus, ArrowUpRight, ArrowDownLeft } from 'lucide-react';
 // Importing Constants
@@ -19,6 +20,7 @@ import { GNOSIS_CHAIN_ID } from '@/lib/constants';
 
 export default function Profile() {
   const { walletServicesPlugin } = useWagmiConfig();
+  const { disconnectAsync } = useDisconnect();
 
   const { address, isConnected } = useAccount();
   const { tokenBalances, transactions, isLoading, isError } = useWalletData({
@@ -35,6 +37,15 @@ export default function Profile() {
       }
     } else {
       console.error('WalletServicesPlugin not connected');
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      await disconnectAsync();
+      localStorage.removeItem('selectedWallet');
+    } catch (error) {
+      console.error('Error during logout:', error);
     }
   };
 
@@ -73,23 +84,18 @@ export default function Profile() {
     { icon: <ArrowDownLeft size={24} />, label: 'Receive' },
   ];
 
-  const formattedTransactions =
-    transactions?.transactions.map((t) => ({
-      id: t.transaction_hash,
-      merchant: t.method_name || 'Transaction',
-      amount: t.value,
-      date: new Date(t.block_timestamp).toLocaleDateString(),
-    })) || [];
-
   return (
     <div className="max-w-md mx-auto w-full flex flex-col space-y-6 p-4">
       <ProfileAvatar address={address || ''} />
       <BalanceDisplay balance={totalBalance} title="Gnosis Chain Balance" />
       <ActionButtons actions={actionButtons} />
       <TransactionsList
-        transactions={formattedTransactions}
-        showAllLink="/profile/transactions"
+        transactions={transactions?.transactions || []}
+        showAllLink="/transactions"
       />
+      <Button variant="destructive" className="w-full" onClick={handleLogout}>
+        Logout
+      </Button>
     </div>
   );
 }

@@ -1,6 +1,7 @@
 import React, { PropsWithChildren, useState, useEffect } from 'react';
 import Head from 'next/head';
 // Importing Hooks
+import { useRouter } from 'next/router';
 import { useAccount } from 'wagmi';
 import { useWallet } from '@/hooks/useWallet';
 // Importing Layout
@@ -12,16 +13,35 @@ import { Login } from '@/components/Login';
 import { Spinner } from '@/components/ui/spinner';
 
 export default function Layout({ children }: PropsWithChildren) {
+  const router = useRouter();
   const { isConnecting, isConnected, isDisconnected } = useAccount();
   const { selectedWallet } = useWallet();
 
   const [isInitialized, setIsInitialized] = useState(false);
+
+  // Determine if we're on the desktop page
+  const isDesktopPage = router.pathname === '/desktop';
 
   useEffect(() => {
     if (!isConnecting) {
       setIsInitialized(true);
     }
   }, [isConnecting]);
+
+  if (isDesktopPage) {
+    return (
+      <div className="min-h-screen w-full bg-02 dark:bg-08 flex items-center justify-center px-8">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold mb-4">
+            App available only on mobile devices
+          </h1>
+          <p className="text-base">
+            Please access from a smartphone or tablet and refresh.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   if (!isInitialized) {
     return (

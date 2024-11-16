@@ -1,3 +1,4 @@
+// Token balance type
 export type TokenBalance = {
   chain: string;
   chain_id: number;
@@ -5,45 +6,41 @@ export type TokenBalance = {
   amount: string;
   symbol: string;
   decimals: number;
-  price_usd?: number;
-  value_usd?: number;
 };
 
+// Response type for token balances
 export type TokenBalancesResponse = {
   request_time: string;
   response_time: string;
   wallet_address: string;
   balances: TokenBalance[];
-  next_offset?: string;
-  errors?: Array<{
-    message: string;
-  }>;
 };
 
+// Transaction type
 export type Transaction = {
+  address: string;
   chain: string;
   chain_id: number;
-  from_address: string;
-  to_address: string;
-  transaction_hash: string;
+  block_hash: string;
   block_number: number;
-  block_timestamp: string;
-  transaction_index: number;
+  block_time: string;
+  data: string;
+  from: string;
+  gas_price: string;
+  hash: string;
+  index: number;
+  logs: any[];
+  nonce: string;
+  success: boolean;
+  to: string;
+  transaction_type: string;
   value: string;
-  gas_price?: string;
-  gas_used?: string;
-  input_data?: string;
-  method_id?: string;
-  method_name?: string;
 };
 
+// Response type for transactions
 export type TransactionsResponse = {
   request_time: string;
   response_time: string;
   wallet_address: string;
   transactions: Transaction[];
-  next_offset?: string;
-  errors?: Array<{
-    message: string;
-  }>;
 };

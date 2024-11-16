@@ -56,20 +56,12 @@ export default function Home() {
     { icon: <MoreHorizontal size={24} />, label: 'More' },
   ];
 
-  const formattedTransactions =
-    transactions?.transactions.map((t) => ({
-      id: t.transaction_hash,
-      merchant: t.method_name || 'Transaction',
-      amount: t.value,
-      date: new Date(t.block_timestamp).toLocaleDateString(),
-    })) || [];
-
   return (
     <div className="max-w-md mx-auto w-full flex flex-col space-y-6 p-4">
       <BalanceDisplay balance={totalBalance} title="Total Balance" />
       <ActionButtons actions={actionButtons} />
       <TransactionsList
-        transactions={formattedTransactions}
+        transactions={transactions?.transactions || []}
         showAllLink="/transactions"
       />
     </div>
