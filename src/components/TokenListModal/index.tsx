@@ -25,7 +25,7 @@ export default function TokenListModal({
       <DialogContent className="w-72 xs:w-96 p-4 shadow-md rounded-xl">
         <DialogHeader>
           <DialogTitle className="text-xl font-bold text-center">
-            Switch or Create Smart Wallet
+            Tokens
           </DialogTitle>
         </DialogHeader>
         <div className="px-2 pb-6">

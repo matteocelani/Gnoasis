@@ -20,9 +20,6 @@ import { GNOSIS_CHAIN_ID } from '@/lib/constants';
 
 // Fake Gnosis Card data
 const cardData = {
-  lastFourDigits: '1234',
-  balance: '€1,234.56',
-  fullNumber: '1234 5678 9012 3456',
   expiryDate: '12/25',
   cvv: '123',
 };
@@ -47,6 +44,12 @@ export default function Cards() {
         formatUnits(BigInt(xDaiToken.amount), xDaiToken.decimals)
       ).toFixed(2)
     : '0.00';
+
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text).catch((err) => {
+      console.error('Errore durante la copia:', err);
+    });
+  };
 
   if (!isConnected)
     return (
@@ -98,7 +101,12 @@ export default function Cards() {
           <div className="text-right">
             <div className="text-sm opacity-80">xDai Balance</div>
             <div className="text-3xl font-bold">{xDaiBalance}</div>
-            <div className="mt-2 text-lg">•••• {cardData.lastFourDigits}</div>
+            <div className="mt-2 text-lg">
+              ••••{' '}
+              {selectedWallet?.address.substring(
+                selectedWallet?.address.length - 4
+              )}
+            </div>
           </div>
           {/* Overlay for card details */}
           <div
@@ -107,7 +115,12 @@ export default function Cards() {
             <div className="text-center">
               <div className="mb-4">
                 <div className="text-sm opacity-80">Card Number</div>
-                <div className="text-lg">{cardData.fullNumber}</div>
+                <div
+                  className="text-sm tracking-tight"
+                  onClick={() => copyToClipboard(selectedWallet?.address || '')}
+                >
+                  {selectedWallet?.address}
+                </div>
               </div>
               <div className="flex justify-center space-x-8">
                 <div>
