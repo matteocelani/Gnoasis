@@ -33,7 +33,7 @@ export default function Layout({ children }: PropsWithChildren) {
 
   if (!isConnected || isDisconnected) {
     return (
-      <div className="min-h-screen w-full bg-background flex items-center justify-center px-8">
+      <div className="min-h-screen w-full bg-02 dark:bg-08 flex items-center justify-center px-8">
         <Login />
       </div>
     );
@@ -41,14 +41,14 @@ export default function Layout({ children }: PropsWithChildren) {
 
   if (selectedWallet) {
     return (
-      <div className="min-h-screen w-full bg-background flex items-center justify-center px-8">
+      <div className="min-h-screen w-full bg-02 dark:bg-08 flex items-center justify-center px-8">
         <SmartWalletSelection />
       </div>
     );
   }
 
   return (
-    <div className="flex flex-col min-h-screen bg-background text-foreground">
+    <div className="flex flex-col min-h-screen bg-02 dark:bg-08 text-foreground">
       <Head>
         <meta
           name="viewport"

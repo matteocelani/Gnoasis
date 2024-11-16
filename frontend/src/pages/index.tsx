@@ -1,14 +1,64 @@
-import React, { Fragment } from 'react';
-//Importing Components
-import Meta from '@/components/Meta';
-export default function Home() {
-  return (
-    <Fragment>
-      <Meta />
+import React from 'react';
+// Importing Hooks
+import { useAccount } from 'wagmi';
+import { useWalletData } from '@/hooks/useWalletData';
+// Importing Components
+import { BalanceDisplay } from '@/components/BalanceDisplay';
+import { ActionButtons } from '@/components/ActionButtons';
+import { TransactionsList } from '@/components/TransactionsList';
+import { Plus, ArrowRightLeft, FileText, MoreHorizontal } from 'lucide-react';
+// Importing Constants
+import { GNOSIS_CHAIN_ID } from '@/lib/constants';
 
-      <div className="w-full flex flex-col">
-        <h3 className="text-2xl text-center mt-4">Home</h3>
+export default function Home() {
+  const { address, isConnected } = useAccount();
+  const { tokenBalances, transactions, isLoading, isError } = useWalletData({
+    address: address || '',
+    chainIds: GNOSIS_CHAIN_ID,
+  });
+
+  const totalBalance =
+    tokenBalances?.balances.reduce(
+      (total, token) => total + (token.value_usd || 0),
+      0
+    ) || 0;
+
+  if (!isConnected)
+    return (
+      <div className="text-center p-8 text-xl">Please connect your wallet</div>
+    );
+  if (isLoading)
+    return <div className="text-center p-8 text-xl">Loading...</div>;
+  if (isError)
+    return (
+      <div className="text-center p-8 text-xl text-red-500">
+        Error loading data
       </div>
-    </Fragment>
+    );
+
+  const actionButtons = [
+    { icon: <Plus size={24} />, label: 'Add' },
+    { icon: <ArrowRightLeft size={24} />, label: 'Move' },
+    { icon: <FileText size={24} />, label: 'Details' },
+    { icon: <MoreHorizontal size={24} />, label: 'More' },
+  ];
+
+  const formattedTransactions =
+    transactions?.transactions.map((t) => ({
+      id: t.transaction_hash,
+      merchant: t.method_name || 'Transaction',
+      amount: t.value,
+      date: new Date(t.block_timestamp).toLocaleDateString(),
+    })) || [];
+
+  return (
+    <div className="max-w-md mx-auto w-full flex flex-col space-y-6 p-4">
+      <BalanceDisplay balance={totalBalance} title="Total Balance" />
+      <ActionButtons actions={actionButtons} />
+      <TransactionsList
+        transactions={formattedTransactions}
+        showAllLink="/transactions"
+      />
+    </div>
   );
 }

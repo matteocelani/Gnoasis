@@ -1,7 +1,8 @@
 import React, { Fragment } from 'react';
 //Importing Components
 import Meta from '@/components/Meta';
-export default function Home() {
+
+export default function Payments() {
   return (
     <Fragment>
       <Meta />
