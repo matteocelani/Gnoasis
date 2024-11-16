@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 // Importing Viem
 import { formatUnits } from 'viem';
 // Importing Hooks
@@ -12,6 +12,7 @@ import { TransactionsList } from '@/components/TransactionsList';
 import BalanceDisplayLoading from '@/components/BalanceDisplay/loading';
 import ActionButtonsLoading from '@/components/ActionButtons/loading';
 import TransactionsListLoading from '@/components/TransactionsList/loading';
+import SwitchWalletModal from '@/components/SwitchWalletModal';
 // Importing Icons
 import { Plus, ArrowRightLeft, Coins, RefreshCw } from 'lucide-react';
 // Importing Constants
@@ -20,6 +21,8 @@ import { GNOSIS_CHAIN_ID } from '@/lib/constants';
 export default function Home() {
   const { isConnected } = useAccount();
   const { selectedWallet } = useWallet();
+
+  const [isSwitchModalOpen, setIsSwitchModalOpen] = useState(false);
 
   const { tokenBalances, transactions, isLoading, isError } = useWalletData({
     address: selectedWallet?.address || '',
@@ -59,7 +62,11 @@ export default function Home() {
     { icon: <Plus size={24} />, label: 'Add' },
     { icon: <ArrowRightLeft size={24} />, label: 'Move' },
     { icon: <Coins size={24} />, label: 'Tokens' },
-    { icon: <RefreshCw size={24} />, label: 'Switch' },
+    {
+      icon: <RefreshCw size={24} />,
+      label: 'Switch',
+      onClick: () => setIsSwitchModalOpen(true),
+    },
   ];
 
   return (
@@ -69,6 +76,10 @@ export default function Home() {
       <TransactionsList
         transactions={transactions?.transactions || []}
         showAllLink="/transactions"
+      />
+      <SwitchWalletModal
+        isOpen={isSwitchModalOpen}
+        onClose={() => setIsSwitchModalOpen(false)}
       />
     </div>
   );
