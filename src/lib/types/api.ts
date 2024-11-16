@@ -44,3 +44,21 @@ export type TransactionsResponse = {
   wallet_address: string;
   transactions: Transaction[];
 };
+
+export type Swap = {
+  id: string;
+  tokenIn: string;
+  tokenOut: string;
+  amountIn: string;
+  amountOut: string;
+  date: string;
+};
+
+export type SwapResponse = {
+  uid: string;
+  buyToken: string;
+  sellToken: string;
+  amountIn: string;
+  amountOut: string;
+  creationDate: string;
+};
