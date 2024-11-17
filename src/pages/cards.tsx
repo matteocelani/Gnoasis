@@ -47,7 +47,7 @@ export default function Cards() {
 
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text).catch((err) => {
-      console.error('Errore durante la copia:', err);
+      console.error('Error copying to clipboard:', err);
     });
   };
 
@@ -140,7 +140,7 @@ export default function Cards() {
       <ActionButtons actions={actionButtons} />
       <TransactionsList
         transactions={transactions?.transactions || []}
-        showAllLink="/transaction"
+        showAllLink="/transactions"
       />
     </div>
   );

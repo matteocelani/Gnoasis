@@ -63,7 +63,11 @@ export default function Home() {
     );
 
   const actionButtons = [
-    { icon: <Plus size={24} />, label: 'Add' },
+    {
+      icon: <Plus size={24} />,
+      label: 'Add',
+      onClick: () => window.open('https://uramp.gnosis.io/', '_blank'),
+    },
     {
       icon: <ArrowRightLeft size={24} />,
       label: 'Move',

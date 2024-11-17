@@ -54,7 +54,7 @@ export default function createWeb3AuthInstances(
   const walletServicesPlugin = new WalletServicesPlugin({
     walletInitOptions: {
       whiteLabel: {
-        showWidgetButton: true,
+        showWidgetButton: false,
       },
     },
   });

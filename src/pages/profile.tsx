@@ -24,21 +24,25 @@ export default function Profile() {
   const { walletServicesPlugin } = useWagmiConfig();
   const { disconnectAsync } = useDisconnect();
 
-  const { address, isConnected } = useAccount();
+  const { address, isConnected, connector } = useAccount();
   const { tokenBalances, transactions, isLoading, isError } = useWalletData({
     address: address || '',
     chainIds: GNOSIS_CHAIN_ID,
   });
 
   const handleOnRamp = async () => {
-    if (walletServicesPlugin?.status === 'connected') {
-      try {
-        await walletServicesPlugin.showCheckout();
-      } catch (error) {
-        console.error('Error showing on-ramp checkout:', error);
+    if (connector?.id === 'web3auth') {
+      if (walletServicesPlugin?.status === 'connected') {
+        try {
+          await walletServicesPlugin.showCheckout();
+        } catch (error) {
+          console.error('Error showing on-ramp checkout:', error);
+        }
+      } else {
+        console.error('WalletServicesPlugin not connected');
       }
     } else {
-      console.error('WalletServicesPlugin not connected');
+      window.open('https://uramp.gnosis.io/', '_blank');
     }
   };
 

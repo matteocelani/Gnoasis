@@ -6,6 +6,12 @@ type ProfileAvatarProps = {
 };
 
 export function ProfileAvatar({ address }: ProfileAvatarProps) {
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text).catch((err) => {
+      console.error('Error copying to clipboard:', err);
+    });
+  };
+
   return (
     <div className="flex flex-col items-center">
       <Avatar className="w-24 h-24">
@@ -14,7 +20,12 @@ export function ProfileAvatar({ address }: ProfileAvatarProps) {
           {address ? address.slice(0, 2).toUpperCase() : 'User'}
         </AvatarFallback>
       </Avatar>
-      <p className="mt-4 text-lg font-medium">{getShortAddress(address)}</p>
+      <p
+        className="mt-4 text-lg font-medium"
+        onClick={() => copyToClipboard(address)}
+      >
+        {getShortAddress(address)}
+      </p>
     </div>
   );
 }
