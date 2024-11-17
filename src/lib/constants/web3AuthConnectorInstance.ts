@@ -29,7 +29,7 @@ export default function createWeb3AuthInstances(
 
   const web3AuthInstance = new Web3AuthNoModal({
     clientId:
-      'BE1d6IdGb7BxZ_ndUgYHz2ZnoZYWjhZ4LqAGAzG5nWPIgI6jFOkW4GCZofRtMx4XL-xh8-RZCr3oK8CTFgAfgH4', // Testnet
+      'BGKKqu8vVbYP6rx-a4gfB6OMOvGAb5RmzyWpHW0vfsOBn9LFIOQfXO7IxU9I7CJ3m2DmZViT_V0faz_VqvgVdxk', // Testnet
     chainConfig,
     privateKeyProvider,
     uiConfig: {
