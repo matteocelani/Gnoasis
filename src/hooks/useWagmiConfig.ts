@@ -49,8 +49,6 @@ import { useEmail } from '@/hooks/useEmail';
 // Importing Web3Auth
 import createWeb3AuthInstances from '@/lib/constants/web3AuthConnectorInstance';
 
-const projectId = '8732baef92dd4d365bfc01b02a084aee';
-
 const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
 
 const transports = {
@@ -102,7 +100,7 @@ const connectors = connectorsForWallets(
   ],
   {
     appName: 'Gnoasis',
-    projectId,
+    projectId: '8732baef92dd4d365bfc01b02a084aee',
   }
 );
 
