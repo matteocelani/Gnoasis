@@ -35,7 +35,6 @@ import {
   tokenPocketWallet,
   trustWallet,
   uniswapWallet,
-  walletConnectWallet,
   xdefiWallet,
   zerionWallet,
 } from '@rainbow-me/rainbowkit/wallets';
@@ -67,7 +66,6 @@ const connectors = connectorsForWallets(
         frameWallet,
         rabbyWallet,
         ledgerWallet,
-        walletConnectWallet,
         phantomWallet,
         coinbaseWallet,
         coin98Wallet,
