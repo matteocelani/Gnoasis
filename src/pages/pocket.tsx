@@ -8,26 +8,24 @@ import {
   CardContent,
 } from '@/components/ui/card';
 
-export default function Invest() {
+export default function Pocket() {
   return (
     <>
       <Meta />
-
       <div className="container mx-auto px-4 py-16 flex flex-1 flex-col items-center justify-center">
         <Card className="w-full max-w-md shadow-md rounded-xl">
           <CardHeader>
             <CardTitle className="text-2xl font-bold text-center">
-              Coming Soon
+              Pocket Feature Coming Soon
             </CardTitle>
             <CardDescription className="text-center">
-              We&apos;re working hard to bring you the best investment
-              experience.
+              We&apos;re crafting a smart way to manage your digital assets.
             </CardDescription>
           </CardHeader>
           <CardContent className="text-center">
             <p className="mb-6">
-              We apologize for the delay. Our team is putting the final touches
-              on some exciting features.
+              Our team is developing an innovative pocket system to help you
+              organize and access your crypto with ease.
             </p>
           </CardContent>
         </Card>

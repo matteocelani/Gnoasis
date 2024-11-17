@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 // Importing Viem
 import { formatUnits } from 'viem';
 // Importing Hooks
+import { useRouter } from 'next/router';
 import { useAccount } from 'wagmi';
 import { useWalletData } from '@/hooks/useWalletData';
 import { useWallet } from '@/hooks/useWallet';
@@ -20,6 +21,7 @@ import { Plus, ArrowRightLeft, Coins, RefreshCw } from 'lucide-react';
 import { GNOSIS_CHAIN_ID } from '@/lib/constants';
 
 export default function Home() {
+  const router = useRouter();
   const { isConnected } = useAccount();
   const { selectedWallet } = useWallet();
 
@@ -62,7 +64,11 @@ export default function Home() {
 
   const actionButtons = [
     { icon: <Plus size={24} />, label: 'Add' },
-    { icon: <ArrowRightLeft size={24} />, label: 'Move' },
+    {
+      icon: <ArrowRightLeft size={24} />,
+      label: 'Move',
+      onClick: () => router.push('/pocket'),
+    },
     {
       icon: <Coins size={24} />,
       label: 'Tokens',

@@ -1,4 +1,3 @@
-// components/ProviderWrapper.tsx
 import React from 'react';
 // TanStack
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -12,6 +11,8 @@ import useWagmiConfig from '@/hooks/useWagmiConfig';
 import merge from 'lodash.merge';
 import { gnosis } from 'wagmi/chains';
 import { WalletProvider } from '@/context/WalletContext';
+// PWA Prompt
+import { PWAPrompt } from './PWAPrompt';
 
 const theme = merge(lightTheme(), {
   colors: {
@@ -47,6 +48,7 @@ export default function ProviderWrapper({ children }: ProviderWrapperProps) {
             showRecentTransactions={true}
           >
             {children}
+            <PWAPrompt />
           </RainbowKitProvider>
         </QueryClientProvider>
       </WagmiProvider>
