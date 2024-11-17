@@ -10,7 +10,7 @@ export default function Meta() {
       <meta name="description" content={metadata.description} />
       <meta name="keywords" content={metadata.keywords} />
       <meta name="image" content={metadata.image} />
-      <meta name="author" content={metadata.autor} />
+      <meta name="author" content={metadata.author} />
 
       <link rel="manifest" href="/site.webmanifest" />
       <meta name="msapplication-TileColor" content="#f2f2f7" />
