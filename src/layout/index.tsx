@@ -11,6 +11,7 @@ import SmartWalletSelection from '@/layout/SmartWalletSelection';
 // Importing Components
 import { Login } from '@/components/Login';
 import { Spinner } from '@/components/ui/spinner';
+import Meta from '@/components/Meta';
 
 export default function Layout({ children }: PropsWithChildren) {
   const router = useRouter();
@@ -31,12 +32,7 @@ export default function Layout({ children }: PropsWithChildren) {
   if (isDesktopPage) {
     return (
       <div className="min-h-screen w-full bg-02 dark:bg-08 flex items-center justify-center px-8">
-        <Head>
-          <meta
-            name="viewport"
-            content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
-          />
-        </Head>
+        <Meta />
         <div className="text-center">
           <h1 className="text-2xl font-bold mb-4">
             App available only on mobile devices
@@ -52,12 +48,7 @@ export default function Layout({ children }: PropsWithChildren) {
   if (!isInitialized) {
     return (
       <div className="min-h-screen w-full bg-background flex items-center justify-center">
-        <Head>
-          <meta
-            name="viewport"
-            content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
-          />
-        </Head>
+        <Meta />
         <Spinner size="lg" className="text-primary" />
       </div>
     );
@@ -66,12 +57,8 @@ export default function Layout({ children }: PropsWithChildren) {
   if (!isConnected || isDisconnected) {
     return (
       <div className="min-h-screen w-full bg-02 dark:bg-08 flex items-center justify-center px-8">
-        <Head>
-          <meta
-            name="viewport"
-            content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
-          />
-        </Head>
+        <Meta />
+
         <Login />
       </div>
     );
@@ -93,12 +80,7 @@ export default function Layout({ children }: PropsWithChildren) {
 
   return (
     <div className="flex flex-col min-h-screen bg-02 dark:bg-08 text-foreground">
-      <Head>
-        <meta
-          name="viewport"
-          content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
-        />
-      </Head>
+      <Meta />
 
       <Header />
 

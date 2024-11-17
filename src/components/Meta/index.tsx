@@ -1,7 +1,8 @@
 // Importing Next
 import Head from 'next/head';
+import Script from 'next/script';
 // Importing Const
-import { metadata } from '@/lib/constants';
+import { metadata, GA_ID } from '@/lib/constants';
 
 export default function Meta() {
   return (
@@ -51,6 +52,26 @@ export default function Meta() {
       <meta name="twitter:title" content={metadata.title} />
       <meta name="twitter:description" content={metadata.description} />
       <meta name="twitter:image" content={metadata.image} />
+
+      <>
+        {/* Global Site Tag (gtag.js) - Google Analytics */}
+        <Script
+          id="gtag-script"
+          src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
+          strategy="afterInteractive"
+          onError={(e) =>
+            console.error('Error loading Google Tag Manager: ', e)
+          }
+        />
+        <Script id="gtag-inline-script" strategy="afterInteractive">
+          {`
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', '${GA_ID}', {page_path: window.location.pathname});
+            `}
+        </Script>
+      </>
     </Head>
   );
 }

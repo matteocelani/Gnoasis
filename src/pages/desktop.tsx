@@ -1,12 +1,9 @@
-import Head from 'next/head';
+import Meta from '@/components/Meta';
 
 export default function DesktopNotSupported() {
   return (
     <>
-      <Head>
-        <title>Mobile Only | App available only on mobile devices</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-      </Head>
+      <Meta />
 
       <div className="w-full flex flex-col">
         <h1 className="text-center text-3xl font-bold mb-4">

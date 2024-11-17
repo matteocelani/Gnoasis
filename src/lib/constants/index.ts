@@ -44,6 +44,9 @@ export const metadata = {
   ],
 };
 
+// Google Analytics
+export const GA_ID = 'G-H9FTVQWBCT';
+
 export const BASE_URL = 'https://safe-client.safe.global/v1';
 export const RESPONSE_STATUS_200 = 200;
 export const RESPONSE_STATUS_201 = 201;
